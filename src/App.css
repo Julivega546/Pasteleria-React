@@ -68,7 +68,7 @@ a:hover {
 }
 
 #image_third {
-    background-image: url(/img/perro2.webp);
+    background-image: url(/imagen/logo.jpg);
     border-radius: 50%;
     width: 250px;
     height: 250px;
@@ -112,12 +112,52 @@ a:hover {
     width: 100%;
 }
 
-.client{
-    background-image: url(/img/perro3.png);
+.client1{
+    background-image: url(/imagen/Brownies-sin-gluten.jpg);
     background-position: center;
-    background-size: contain;
-    height: 150px;
-    width: 150px;
+    background-size: cover;
+    height: 120px;
+    width: 160px;
+    background-color: #1e1a20;
+}
+.client2{
+    background-image: url(/imagen/cheese-cake.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 120px;
+    width: 160px;
+    background-color: #1e1a20;
+}
+.client3{
+    background-image: url(/imagen/empanadas-manzana.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 120px;
+    width: 160px;
+    background-color: #1e1a20;
+}
+.client4{
+    background-image: url(/imagen/galletas-avena-veganas.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 120px;
+    width: 160px;
+    background-color: #1e1a20;
+}
+.client5{
+    background-image: url(/imagen/mousse-chocolate.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 120px;
+    width: 160px;
+    background-color: #1e1a20;
+}
+.client6{
+    background-image: url(/imagen/pan-sin-gluten.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 120px;
+    width: 160px;
     background-color: #1e1a20;
 }
 #clients{

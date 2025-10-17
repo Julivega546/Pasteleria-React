@@ -3,14 +3,18 @@ import First from '../organisms/First'
 import Second from '../organisms/Second'
 import Third from '../organisms/Third'
 import Fourth from '../organisms/Fourth'
+import Cart from './Cart'
 
 export default function Home() {
   return (
     <>
+    
         <First/>
         <Second/>
         <Third/>
         <Fourth/>
+        <Cart/>
     </>
+    
   )
 }

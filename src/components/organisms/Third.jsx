@@ -7,10 +7,9 @@ export default function Third() {
             <div id="image_third"></div>
         </div>
         <div id="right_third">
-            <p>"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sed dolorum voluptate repellat excepturi vero dolor incidunt quibusdam quidem hic quasi?"</p>
-            <p>co-owner</p>
-            <p>Linda larson</p>
-            <p>image from <span>freepik</span></p>
+            <p>"Estamos emocionados de compartir nuestras delicias Contigo"</p>
+            <p>Descubre , Saborea y Crea momentos inolvidables con Nosotros</p>
+            <p>Pasteleria Mill Sabores</p>
         </div>
     </section>
   )
