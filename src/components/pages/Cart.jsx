@@ -5,8 +5,6 @@ export default function Cart() {
   const [pedido, setPedido] = useState("");
   const [estado, setEstado] = useState("");
 
-
-
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("products")) || [];
     setProducts(stored);
@@ -22,7 +20,8 @@ export default function Cart() {
     localStorage.removeItem("products");
     setProducts([]);
   };
-  const total = products.reduce((acc, p) => acc + p.price, 0);
+
+  const total = products.reduce((acc, p) => acc + Number(p.price), 0);
 
   const consultarPedido = () => {
     if (pedido === "123") {
@@ -34,18 +33,30 @@ export default function Cart() {
     }
   };
 
+  const handlePagar = () => {
+    if (products.length === 0) return alert("Tu carrito está vacío 🍰");
+    const id = "PED-" + Math.floor(100000 + Math.random() * 900000);
+    const pedidoData = {
+      id,
+      productos: products,
+      total,
+      fecha: new Date().toLocaleString(),
+      estado: "En preparación",
+    };
+    localStorage.setItem("pedidoActual", JSON.stringify(pedidoData));
+    clearCart();
+    setEstado(`🎉 Pedido ${id} creado correctamente. Puedes hacer seguimiento.`);
+  };
 
   return (
-    <>
-      <p>
-        🛒 <span className="items">{products.length}</span>
-      </p>
+    <section className="cart-container">
+      <h2>🛒 Carrito de Compras</h2>
 
       {products.length === 0 ? (
         <p>No hay productos en el carrito.</p>
-      ) :(
+      ) : (
         <>
-          <table border="1" cellPadding="8" style={{ margin: "auto" }}>
+          <table className="cart-table">
             <thead>
               <tr>
                 <th>CÓDIGO</th>
@@ -68,13 +79,21 @@ export default function Cart() {
                   <td>${p.price}</td>
                   <td>
                     <button onClick={() => removeProduct(p.code)}>Eliminar</button>
-                    
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-            <div className="seguimiento-carrito">
+
+          <div className="cart-summary">
+            <h3>Total: ${total}</h3>
+            <div className="cart-actions">
+              <button onClick={clearCart}>Vaciar carrito</button>
+              <button onClick={handlePagar}>Pagar</button>
+            </div>
+          </div>
+
+          <div className="seguimiento-carrito">
             <h3>📦 Seguimiento de pedido</h3>
             <div className="seguimiento-inputs">
               <input
@@ -89,13 +108,8 @@ export default function Cart() {
             </div>
             {estado && <p className="seguimiento-estado">{estado}</p>}
           </div>
-
-          <br />
-          <button onClick={clearCart}>Vaciar carrito</button>
         </>
       )}
-    
-    </>
-    
+    </section>
   );
 }
