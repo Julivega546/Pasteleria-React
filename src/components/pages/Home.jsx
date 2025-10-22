@@ -3,7 +3,8 @@ import First from '../organisms/First'
 import Second from '../organisms/Second'
 import Third from '../organisms/Third'
 import Fourth from '../organisms/Fourth'
-import Cart from './Cart'
+import Product from '../organisms/Product';
+
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
         <Second/>
         <Third/>
         <Fourth/>
-        <Cart/>
+        <Product/>
     </>
     
   )
