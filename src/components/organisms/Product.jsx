@@ -125,6 +125,7 @@ export default function Product() {
     productsInCart.push(product);
     localStorage.setItem("products", JSON.stringify(productsInCart));
   };
+  
 
   return (
     <section className="products">

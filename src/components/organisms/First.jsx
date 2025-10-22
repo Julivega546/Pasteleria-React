@@ -30,7 +30,7 @@ export default function First() {
           onMouseEnter={() => setShowSocials(true)}
           onMouseLeave={() => setShowSocials(false)}
         >
-          <span>🌸 Redes Sociales</span>
+          <span>🌸Redes Sociales</span>
           {showSocials && (
             <div className="social-dropdown">
               <a href="https://www.instagram.com" target="_blank" rel="noreferrer">📸 Instagram</a>
@@ -49,11 +49,13 @@ export default function First() {
         )}
         {isLoggedIn && (
           <>
-            <Link to="/perfil">Perfil</Link>
+            <Link to="/perfil">Perfil 👤</Link>
             <button onClick={handleLogout}>Cerrar Sesión</button>
           </>
         )}
+      
       </nav>
     </section>
+
   );
 }

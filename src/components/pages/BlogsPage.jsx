@@ -41,6 +41,11 @@ export default function BlogsPage() {
             <p>{blog.description}</p>
           </article>
         ))}
+      <footer>
+      <p className="footer">
+        © 2025 Pastelería Mil Sabores — Todos los derechos reservados 🍮
+      </p>
+    </footer>
       </div>
     </section>
   );
