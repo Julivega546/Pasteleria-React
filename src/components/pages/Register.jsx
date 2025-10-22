@@ -1,97 +1,73 @@
-import React, { useState } from "react";
-import "../App.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    pass: "",
-    pass2: "",
-  });
-  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
 
-    const { name, email, pass, pass2 } = form;
-
-    if (!name || !email || !pass) {
-      setMessage("⚠️ Todos los campos son obligatorios");
+    if (!email || !password || !confirmPassword) {
+      setError("Por favor, completa todos los campos.");
       return;
     }
 
-    if (pass !== pass2) {
-      setMessage("❌ Las contraseñas no coinciden");
+    if (password !== confirmPassword) {
+      setError("Las contraseñas no coinciden.");
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("milSabores_users")) || {};
 
-    if (users[email.toLowerCase()]) {
-      setMessage("⚠️ Este correo ya está registrado");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const userExists = users.find((user) => user.email === email);
+
+    if (userExists) {
+      setError("Este correo ya está registrado.");
       return;
     }
 
-    users[email.toLowerCase()] = { name, email, pass };
-    localStorage.setItem("milSabores_users", JSON.stringify(users));
+    const newUser = { email, password };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
 
-    setMessage("✅ Registro exitoso. Redirigiendo...");
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 1500);
+    setSuccess("✅ Registro exitoso. Ahora puedes iniciar sesión.");
+    setError("");
+
+    setTimeout(() => navigate("/login"), 2000);
   };
 
   return (
-    <section className="auth-container">
-      <div className="auth-card">
-        <h2>🧁 Crear cuenta</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input
-            name="name"
-            placeholder="Nombre completo"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Correo electrónico"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="pass"
-            placeholder="Contraseña"
-            value={form.pass}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="pass2"
-            placeholder="Repetir contraseña"
-            value={form.pass2}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit" className="btn-auth">
-            Registrar
-          </button>
-        </form>
+    <section className="register">
+      <h2>Crear Cuenta</h2>
+      <form onSubmit={handleRegister} className="register-form">
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Confirmar contraseña"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <button type="submit">Registrarme</button>
+      </form>
 
-        {message && <p className="auth-message">{message}</p>}
-
-        <p className="auth-alt">
-          ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
-        </p>
-      </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
     </section>
   );
 }

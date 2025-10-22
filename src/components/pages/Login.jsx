@@ -1,68 +1,51 @@
-import React, { useState } from "react";
-import "../App.css";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
-  const [message, setMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("milSabores_users")) || {};
-    const user = users[email.toLowerCase()];
-
-    if (!user) {
-      setMessage("❌ Usuario no encontrado");
-      return;
-    }
-
-    if (pass !== user.pass) {
-      setMessage("❌ Contraseña incorrecta");
-      return;
-    }
-
-    // Guarda sesión
-    sessionStorage.setItem(
-      "milSabores_session",
-      JSON.stringify({ user: user.name, email: user.email })
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const validUser = users.find(
+      (user) => user.email === email && user.password === password
     );
-
-    setMessage(`🎉 Bienvenido/a ${user.name}`);
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1500);
+    if (validUser) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("currentUser", email);
+      navigate("/");
+    } else {
+      setError("Correo o contraseña incorrectos ❌");
+    }
   };
 
   return (
-    <section className="auth-container">
-      <div className="auth-card">
-        <h2>🍰 Iniciar Sesión</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input
-            type="email"
-            placeholder="Correo electrónico"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={pass}
-            onChange={(e) => setPass(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn-auth">
-            Ingresar
-          </button>
-        </form>
-
-        {message && <p className="auth-message">{message}</p>}
-
-        <p className="auth-alt">
-          ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
-        </p>
-      </div>
+    <section className="login">
+      <h2>Iniciar Sesión</h2>
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Ingresar</button>
+      </form>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <p>
+        ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+      </p>
     </section>
   );
 }
