@@ -7,6 +7,8 @@ import Login from "./components/pages/Login";
 import Register from "./components/pages/Register";
 import Profile from "./components/pages/Profile";
 import ProtectedRoute from "./components/pages/ProtectedRoute";
+import ProductsPage from "./components/pages/ProductsPage";
+import BlogsPage from "./components/pages/BlogsPage";
 
 function App() {
   return (
@@ -47,6 +49,18 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/productos"
+          element={
+            <ProtectedRoute>
+              <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+         path="/blogs" element={<BlogsPage />} />
+
+      
       </Routes>
     </BrowserRouter>
   );

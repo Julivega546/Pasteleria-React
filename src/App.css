@@ -294,30 +294,75 @@ button:hover {
   font-weight: bold;
   margin-top: 10px;
 }
-/* --- 🔐 LOGIN Y REGISTRO --- */
-.auth-container {
+
+ .auth-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fdfdfd;
+  text-align: center;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  min-height: 90vh;
-  background: #fff5e6;
 }
 
 .auth-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 40px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 .auth-card h2 {
-  color: #8B4513;
-  font-family: 'Pacifico', cursive;
-  margin-bottom: 20px;
+  color: #5D4037;
+  margin-bottom: 25px;
   font-size: 28px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s ease-in-out;
+}
+
+.auth-form input:focus {
+  border-color: #ffb6c1;
+  box-shadow: 0 0 8px rgba(255, 182, 193, 0.5);
+}
+
+.btn-auth {
+  background: #ff7b7b;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.btn-auth:hover {
+  background: #e35757;
+}
+
+.auth-message {
+  color: #b22222;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .auth-form {
@@ -348,7 +393,7 @@ button:hover {
   font-weight: bold;
   color: #5D4037;
   font-size: 16px;
-  transition: background 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .btn-auth:hover {
@@ -454,4 +499,92 @@ button:hover {
 .profile button:hover {
   background-color: #e35757;
 }
+.cart {
+ position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fdfdfd;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.cart table {
+  width: 90%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.cart th, .cart td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.cart th {
+  background-color: #ffc0cb;
+  color: #5D4037;
+}
+
+.cart img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.cart button {
+  background-color: #ff7b7b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.cart button:hover {
+  background-color: #e35757;
+}
+.social-menu {
+  position: relative;
+}
+
+.social-toggle {
+  position: relative;
+  cursor: pointer;
+  font-weight: bold;
+  color: #5D4037;
+}
+
+.social-dropdown {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  z-index: 10;
+}
+
+.social-dropdown a {
+  color: #5D4037;
+  padding: 5px 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.social-dropdown a:hover {
+  background-color: #ffe4ec;
+  border-radius: 5px;
+}
+
 

@@ -22,7 +22,6 @@ export default function Register() {
       return;
     }
 
-
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const userExists = users.find((user) => user.email === email);
 
@@ -38,36 +37,37 @@ export default function Register() {
     setSuccess("✅ Registro exitoso. Ahora puedes iniciar sesión.");
     setError("");
 
-    setTimeout(() => navigate("/login"), 2000);
+    setTimeout(() => navigate("/login"), 1500);
   };
 
   return (
-    <section className="register">
-      <h2>Crear Cuenta</h2>
-      <form onSubmit={handleRegister} className="register-form">
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <button type="submit">Registrarme</button>
-      </form>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+    <section className="auth-container">
+      <div className="auth-card">
+        <h2>Crear Cuenta</h2>
+        <form onSubmit={handleRegister} className="auth-form">
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <button type="submit" className="btn-auth">Registrarme</button>
+        </form>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {success && <p style={{ color: "green" }}>{success}</p>}
+      </div>
     </section>
   );
 }

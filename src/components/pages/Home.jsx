@@ -3,7 +3,7 @@ import First from '../organisms/First'
 import Second from '../organisms/Second'
 import Third from '../organisms/Third'
 import Fourth from '../organisms/Fourth'
-import Product from '../organisms/Product';
+import BlogsPage from './BlogsPage'
 
 
 export default function Home() {
@@ -14,7 +14,9 @@ export default function Home() {
         <Second/>
         <Third/>
         <Fourth/>
-        <Product/>
+        <section id="blogs">
+        <BlogsPage />
+      </section>
         
     </>
     
