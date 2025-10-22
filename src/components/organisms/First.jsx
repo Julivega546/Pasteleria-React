@@ -12,7 +12,11 @@ export default function First() {
                 <HashLink smooth to='#fourth'>Blogs</HashLink>
                  <Link to="/cart">Carrito</Link>
             </nav>
-            <p>📞+56 9 6244 0331</p>
+            <p>REDES SOCIALES</p>
+            <nav>
+                <HashLink smooth to='#login'>Inicio Sesion</HashLink>
+                <HashLink smooth to='#perfil'>Perfil</HashLink>
+            </nav>
 
         </section>
     )

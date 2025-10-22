@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 
 export default function Cart() {
   const [products, setProducts] = useState([]);
+  const [pedido, setPedido] = useState("");
+  const [estado, setEstado] = useState("");
+
 
 
   useEffect(() => {
@@ -19,6 +22,18 @@ export default function Cart() {
     localStorage.removeItem("products");
     setProducts([]);
   };
+  const total = products.reduce((acc, p) => acc + p.price, 0);
+
+  const consultarPedido = () => {
+    if (pedido === "123") {
+      setEstado("Tu pedido #123 está en camino 🚚");
+    } else if (pedido.trim() === "") {
+      setEstado("Por favor, ingresa un número de pedido ❗");
+    } else {
+      setEstado("Pedido no encontrado ❌");
+    }
+  };
+
 
   return (
     <>
@@ -28,7 +43,7 @@ export default function Cart() {
 
       {products.length === 0 ? (
         <p>No hay productos en el carrito.</p>
-      ) : (
+      ) :(
         <>
           <table border="1" cellPadding="8" style={{ margin: "auto" }}>
             <thead>
@@ -53,16 +68,34 @@ export default function Cart() {
                   <td>${p.price}</td>
                   <td>
                     <button onClick={() => removeProduct(p.code)}>Eliminar</button>
+                    
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+            <div className="seguimiento-carrito">
+            <h3>📦 Seguimiento de pedido</h3>
+            <div className="seguimiento-inputs">
+              <input
+                type="text"
+                placeholder="Ingresa tu número de pedido"
+                value={pedido}
+                onChange={(e) => setPedido(e.target.value)}
+              />
+              <button className="btn" onClick={consultarPedido}>
+                Consultar
+              </button>
+            </div>
+            {estado && <p className="seguimiento-estado">{estado}</p>}
+          </div>
 
           <br />
           <button onClick={clearCart}>Vaciar carrito</button>
         </>
       )}
+    
     </>
+    
   );
 }
