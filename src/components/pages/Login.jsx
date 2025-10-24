@@ -18,7 +18,7 @@ export default function Login() {
       localStorage.setItem("currentUser", email);
       navigate("/");
     } else {
-      setError("Correo o contraseña incorrectos ❌");
+      setError("Correo o contraseña incorrectos ");
     }
   };
 

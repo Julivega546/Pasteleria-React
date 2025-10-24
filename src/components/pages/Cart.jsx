@@ -29,7 +29,7 @@ export default function Cart() {
 
   const handlePagar = () => {
     if (products.length === 0) {
-      alert("Tu carrito está vacío 🍰");
+      alert("Tu carrito está vacío ");
       return;
     }
 
@@ -52,16 +52,16 @@ export default function Cart() {
   const consultarPedido = () => {
     const pedidoActual = JSON.parse(localStorage.getItem("pedidoActual"));
     if (!pedidoActual) {
-      setEstado("No hay pedidos registrados ❌");
+      setEstado("No hay pedidos registrados ");
       return;
     }
 
     if (pedido === pedidoActual.id) {
       setEstado(`📦 Pedido ${pedido} - Estado: ${pedidoActual.estado}`);
     } else if (pedido.trim() === "") {
-      setEstado("Por favor, ingresa un número de pedido ❗");
+      setEstado("Por favor, ingresa un número de pedido ");
     } else {
-      setEstado("Pedido no encontrado ❌");
+      setEstado("Pedido no encontrado ");
     }
   };
 
@@ -131,7 +131,7 @@ export default function Cart() {
             <p>Pronto te enviaremos actualizaciones sobre su estado 📦.</p>
 
             <div className="seguimiento-carrito">
-              <h3>🔎 Seguimiento de pedido</h3>
+              <h3> Seguimiento de pedido</h3>
               <div className="seguimiento-inputs">
                 <input
                   type="text"
