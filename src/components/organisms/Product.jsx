@@ -1,3 +1,6 @@
+import React from "react";
+
+
 export default function Product(props) {
   const { code, image, name, description, price } = props;
   const stars = Math.floor(Math.random() * 2) + 4;

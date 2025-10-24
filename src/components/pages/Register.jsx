@@ -21,7 +21,6 @@ export default function Register() {
     const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
     const monthDiff = new Date().getMonth() - new Date(birthDate).getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && new Date().getDate() < new Date(birthDate).getDate())) {
-      age--;
     }
     if (age < 18) {
       setError("Debes tener al menos 18 años para registrarte.");
