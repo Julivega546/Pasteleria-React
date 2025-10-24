@@ -78,7 +78,9 @@ export default function Cart() {
                   <td>{p.description}</td>
                   <td>${p.price}</td>
                   <td>
-                    <button onClick={() => removeProduct(p.code)}>Eliminar</button>
+                    <button className="btn-clear" onClick={() => removeProduct(p.code)}>
+                      Eliminar
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -88,8 +90,8 @@ export default function Cart() {
           <div className="cart-summary">
             <h3>Total: ${total}</h3>
             <div className="cart-actions">
-              <button onClick={clearCart}>Vaciar carrito</button>
-              <button onClick={handlePagar}>Pagar</button>
+              <button className="btn-clear" onClick={clearCart}>Vaciar carrito</button>
+              <button className="btn-pagar" onClick={handlePagar}>Pagar</button>
             </div>
           </div>
 
@@ -102,7 +104,7 @@ export default function Cart() {
                 value={pedido}
                 onChange={(e) => setPedido(e.target.value)}
               />
-              <button className="btn" onClick={consultarPedido}>
+              <button className="btn-cart" onClick={consultarPedido}>
                 Consultar
               </button>
             </div>

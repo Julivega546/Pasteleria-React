@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { HashLink } from 'react-router-hash-link';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function First() {
@@ -13,13 +12,26 @@ export default function First() {
     navigate("/login");
   };
 
+  const goHomeAndScroll = (sectionId) => {
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const section = document.querySelector(sectionId);
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    } else {
+      const section = document.querySelector(sectionId);
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="first">
       <nav>
-        <HashLink smooth to="#first">Inicio</HashLink>
-        <HashLink smooth to="#second">Nosotros</HashLink>
-        <HashLink smooth to="#third">Recomendado</HashLink>
-        <HashLink smooth to="#blogs">Blogs</HashLink>
+        <a onClick={() => goHomeAndScroll("#first")} style={{ cursor: "pointer" }}>Inicio</a>
+        <a onClick={() => goHomeAndScroll("#second")} style={{ cursor: "pointer" }}>Nosotros</a>
+        <a onClick={() => goHomeAndScroll("#third")} style={{ cursor: "pointer" }}>Recomendado</a>
+        <a onClick={() => goHomeAndScroll("#blogs")} style={{ cursor: "pointer" }}>Blogs</a>
         <Link to="/productos">Productos</Link>
         {isLoggedIn && <Link to="/cart">Carrito</Link>}
       </nav>
@@ -50,12 +62,10 @@ export default function First() {
         {isLoggedIn && (
           <>
             <Link to="/perfil">Perfil 👤</Link>
-            <button onClick={handleLogout}>Cerrar Sesión</button>
+            <button className="logout" onClick={handleLogout}>Cerrar Sesión</button>
           </>
         )}
-      
       </nav>
     </section>
-
   );
 }
