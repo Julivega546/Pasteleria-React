@@ -17,7 +17,7 @@ const ProductoList = () => {
         ProductoService.deleteProducto(id).then(() => {
             fetchProductos();
         }).catch(error => {
-            console.log('Error deleting productos:', error);
+
         });
     };
     return (
