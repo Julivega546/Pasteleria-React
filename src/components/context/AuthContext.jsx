@@ -3,7 +3,7 @@ import {
   isAuthenticated,
   getUsername,
   logout as logoutService,
-} from "../services/AuthService";
+} from "../context/services/AuthService";
 const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [isAuth, setIsAuth] = useState(isAuthenticated());

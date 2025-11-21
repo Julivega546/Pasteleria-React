@@ -41,7 +41,7 @@ export default function ProductosPage() {
       <ul>
         {productos.map((b) => (
           <li key={b.id}>
-            <strong>{b.title}</strong> - {b.descripcion}
+            <strong>{b.nombre}</strong> - {b.descripcion}
           </li>
         ))}
       </ul>
