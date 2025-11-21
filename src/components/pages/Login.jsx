@@ -1,51 +1,68 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-
-export default function Login() {
-  const [email, setEmail] = useState("");
+import { useNavigate } from "react-router-dom";
+import { login as loginService } from "../services/AuthService";
+import { useAuth } from "../context/AuthContext";
+export default function LoginPage() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
+  const { login } = useAuth();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const validUser = users.find(
-      (user) => user.email === email && user.password === password
-    );
-    if (validUser) {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("currentUser", email);
-      navigate("/");
-    } else {
-      setError("Correo o contraseña incorrectos ");
+    setError("");
+    setLoading(true);
+    try {
+      const { token, username: user } = await loginService(username, password);
+      login(token, user);
+      navigate("/productos");
+    } catch (err) {
+      setError(err.response?.data?.error || "Error al iniciar sesión");
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
-    <section className="login">
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit} className="login-form">
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Ingresar</button>
+    <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px" }}>
+      <h1>Iniciar Sesión</h1>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: "15px" }}>
+          <label>Usuario:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+          />
+        </div>
+        <div style={{ marginBottom: "15px" }}>
+          <label>Contraseña:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+          />
+        </div>
+        {error && <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: "100%",
+            padding: "10px",
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            cursor: loading ? "not-allowed" : "pointer",
+          }}
+        >
+          {loading ? "Cargando..." : "Iniciar Sesión"}
+        </button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <p>
-        ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
-      </p>
-    </section>
+    </div>
   );
 }
