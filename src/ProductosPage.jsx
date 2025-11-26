@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProductoService from "../services/ProductoService";
-import { useAuth } from "../context/AuthContext";
+import ProductoService from "./service/ProductoService";
+import { useAuth } from "./context/AuthContext";
 
 export default function ProductosPage() {
   const [productos, setProductos] = useState([]);

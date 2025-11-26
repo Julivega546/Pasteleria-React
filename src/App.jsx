@@ -1,78 +1,70 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
-import ProductosPage from "../pages/ProductosPage";
-
-import ProductoList from "../components/ProductoList";
-import ProductoForm from "../components/ProductoForm";
-
-import ProtectedRoute from "../routes/ProtectedRoute";
-import { AuthProvider } from "../context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
+import LoginPage from "./LoginPage";
+import RegisterPage from "./RegisterPage";
+import ProductosPage from "./ProductosPage";
+import ProductoList from "./ProductoList";
+import ProductoForm from "./ProductoForm";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div>
-          <h1>Producto Management System</h1>
+    <div>
+      <h1>Producto Management System</h1>
 
-          <Routes>
+      <Routes>
+        
+        <Route path="/login" element={<LoginPage />} />
 
-            {/* 🔹 LOGIN */}
-            <Route path="/login" element={<LoginPage />} />
+        
+        <Route path="/register" element={<RegisterPage />} />
 
-            {/* 🔹 REGISTRO */}
-            <Route path="/register" element={<RegisterPage />} />
+        
+        <Route
+          path="/productos"
+          element={
+            <ProtectedRoute>
+              <ProductosPage />
+            </ProtectedRoute>
+          }
+        />
 
-            {/* 🔹 PRODUCTOS (Vista principal protegida) */}
-            <Route
-              path="/productos"
-              element={
-                <ProtectedRoute>
-                  <ProductosPage />
-                </ProtectedRoute>
-              }
-            />
+       
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <ProductoList />
+            </ProtectedRoute>
+          }
+        />
 
-            {/* 🔹 LISTA DE PRODUCTOS CRUD */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <ProductoList />
-                </ProtectedRoute>
-              }
-            />
+        
+        <Route
+          path="/add"
+          element={
+            <ProtectedRoute>
+              <ProductoForm />
+            </ProtectedRoute>
+          }
+        />
 
-            {/* 🔹 AGREGAR PRODUCTO */}
-            <Route
-              path="/add"
-              element={
-                <ProtectedRoute>
-                  <ProductoForm />
-                </ProtectedRoute>
-              }
-            />
+        
+        <Route
+          path="/edit/:id"
+          element={
+            <ProtectedRoute>
+              <ProductoForm />
+            </ProtectedRoute>
+          }
+        />
 
-            {/* 🔹 EDITAR PRODUCTO */}
-            <Route
-              path="/edit/:id"
-              element={
-                <ProtectedRoute>
-                  <ProductoForm />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* 🔹 Redirigir rutas no existentes */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
-
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+        
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </div>
   );
 }
 

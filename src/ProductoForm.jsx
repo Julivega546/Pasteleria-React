@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ProductoService from '../service/ProductoService';
+import ProductoService from './service/ProductoService';
 const ProductoForm = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');

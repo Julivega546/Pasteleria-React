@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ProductoService from '../service/ProductoService';
+import ProductoService from './service/ProductoService';
 const ProductoList = () => {
     const [productos, setProductos] = useState([]);
     useEffect(() => {
