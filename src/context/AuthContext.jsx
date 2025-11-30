@@ -1,28 +1,51 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import {isAuthenticated, getUsername,logout as logoutService,} from "../service/AuthService";
+import {
+  isAuthenticated,
+  getUsername,
+  getRole,
+  getToken,
+  logout as logoutService,
+} from "../service/AuthService";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [isAuth, setIsAuth] = useState(isAuthenticated());
-  const [username, setUsername] = useState(getUsername());
+  const [token, setToken] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [role, setRole] = useState(null);
 
-  const login = (token, user) => {
-    setIsAuth(true);
-    setUsername(user);
+  useEffect(() => {
+    if (isAuthenticated()) {
+      setToken(getToken());
+      setUsername(getUsername());
+      setRole(getRole());
+    }
+  }, []);
+
+  const login = (token, username, role) => {
+    setToken(token);
+    setUsername(username);
+    setRole(role);
   };
 
   const logout = () => {
     logoutService();
-    setIsAuth(false);
+    setToken(null);
     setUsername(null);
+    setRole(null);
   };
 
+  const isAdmin = role === "ADMIN";
+
   return (
-    <AuthContext.Provider value={{ isAuth, username, login, logout }}>
+    <AuthContext.Provider
+      value={{ token, username, role, isAdmin, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}

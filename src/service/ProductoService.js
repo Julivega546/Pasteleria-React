@@ -1,30 +1,24 @@
 import api from "../components/Api/AxiosConfig";
 
 class ProductoService {
-
-  // ✔ Obtener todos los productos
   getAllProductos() {
-    return api.get("/productos");
+    return api.get("/api/productos");
   }
 
-  // ✔ Obtener producto por ID
   getProductoById(id) {
-    return api.get(`/productos/${id}`);
+    return api.get(`/api/productos/${id}`);
   }
 
-  // ✔ Crear producto
   createProducto(producto) {
-    return api.post("/productos", producto);
+    return api.post("/api/productos", producto);
   }
 
-  // ✔ Actualizar producto por ID
   updateProducto(id, producto) {
-    return api.put(`/productos/${id}`, producto);
+    return api.put(`/api/productos/${id}`, producto);
   }
 
-  // ✔ Eliminar producto por ID
   deleteProducto(id) {
-    return api.delete(`/productos/${id}`);
+    return api.delete(`/api/productos/${id}`);
   }
 }
 

@@ -8,6 +8,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -17,12 +18,16 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { token, username: user } = await loginService(username, password);
-      login(token, user);
+      const { token, username: user, role } = await loginService(username, password);
 
+      // ⭐ Guardar token + usuario + rol
+      login(token, user, role);
+
+      // ⭐ Ir a productos
       navigate("/productos");
+
     } catch (err) {
-      setError("Credenciales incorrectas");
+      setError(err.response?.data?.error || "Credenciales incorrectas");
     } finally {
       setLoading(false);
     }
@@ -33,7 +38,7 @@ export default function LoginPage() {
       <h1>Iniciar Sesión</h1>
 
       <form onSubmit={handleSubmit}>
-        
+
         <div style={{ marginBottom: "15px" }}>
           <label>Usuario:</label>
           <input
@@ -44,6 +49,7 @@ export default function LoginPage() {
             style={{ width: "100%", padding: "8px", marginTop: "5px" }}
           />
         </div>
+
         <div style={{ marginBottom: "15px" }}>
           <label>Contraseña:</label>
           <input
@@ -56,7 +62,9 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <p style={{ color: "red", marginBottom: "10px" }}>{error}</p>
+          <p style={{ color: "red", marginBottom: "10px" }}>
+            {error}
+          </p>
         )}
 
         <button
