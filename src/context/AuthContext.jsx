@@ -1,46 +1,40 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import {
-  isAuthenticated,
-  getUsername,
-  getRole,
-  getToken,
-  logout as logoutService,
-} from "../service/AuthService";
+import { createContext, useContext, useState, useEffect } from 'react';
+import { isAuthenticated, getUsername, getRole, logout as logoutService } from '../service/AuthService';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
 
   useEffect(() => {
     if (isAuthenticated()) {
-      setToken(getToken());
-      setUsername(getUsername());
+      setUser(getUsername());
       setRole(getRole());
     }
   }, []);
 
-  const login = (token, username, role) => {
-    setToken(token);
-    setUsername(username);
-    setRole(role);
+  const login = (token, username, userRole) => {
+    setUser(username);
+    setRole(userRole);
   };
 
   const logout = () => {
     logoutService();
-    setToken(null);
-    setUsername(null);
+    setUser(null);
     setRole(null);
   };
 
-  const isAdmin = role === "ADMIN";
-
   return (
-    <AuthContext.Provider
-      value={{ token, username, role, isAdmin, login, logout }}
-    >
+    <AuthContext.Provider value={{ 
+      user, 
+      role,
+      username: user, 
+      isAuthenticated: !!user,
+      isAdmin: role === 'ADMIN',
+      login, 
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );

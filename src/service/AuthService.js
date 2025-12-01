@@ -1,39 +1,60 @@
-import api from "../components/Api/AxiosConfig";
+import axios from 'axios';
 
-const TOKEN_KEY = "token";
-const USERNAME_KEY = "username";
-const ROLE_KEY = "role";
+const AUTH_URL = 'http://98.82.138.164:9090/auth';
 
 export async function login(username, password) {
-  const res = await api.post("/auth/login", { username, password });
-
-  const { token, username: user, role } = res.data;
-
-  localStorage.setItem(TOKEN_KEY, token);
-  localStorage.setItem(USERNAME_KEY, user);
-  localStorage.setItem(ROLE_KEY, role);
-
-  return { token, username: user, role };
+  try {
+    const response = await axios.post(`${AUTH_URL}/login`, { 
+      username, 
+      password 
+    });
+    
+    const { token, username: user, role } = response.data;
+    
+    // Guardar en localStorage
+    localStorage.setItem('token', token);
+    localStorage.setItem('username', user);
+    localStorage.setItem('role', role); // ⭐ GUARDAR ROL
+    
+    return { token, username: user, role };
+  } catch (error) {
+    console.error('Login falló:', error.response?.data || error.message);
+    throw error;
+  }
 }
 
-export function isAuthenticated() {
-  return !!localStorage.getItem(TOKEN_KEY);
-}
-
-export function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-export function getUsername() {
-  return localStorage.getItem(USERNAME_KEY);
-}
-
-export function getRole() {
-  return localStorage.getItem(ROLE_KEY);
+export async function register(username, password, role = 'USER') {
+  try {
+    const response = await axios.post(`${AUTH_URL}/register`, { 
+      username, 
+      password,
+      role // ⭐ ENVIAR ROL
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Registro falló:', error.response?.data || error.message);
+    throw error;
+  }
 }
 
 export function logout() {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USERNAME_KEY);
-  localStorage.removeItem(ROLE_KEY);
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  localStorage.removeItem('role'); // ⭐ LIMPIAR ROL
+}
+
+export function isAuthenticated() {
+  return !!localStorage.getItem('token');
+}
+
+export function getUsername() {
+  return localStorage.getItem('username');
+}
+
+export function getRole() {
+  return localStorage.getItem('role'); // ⭐ OBTENER ROL
+}
+
+export function isAdmin() {
+  return localStorage.getItem('role') === 'ADMIN'; // ⭐ VERIFICAR SI ES ADMIN
 }
