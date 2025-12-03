@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const AUTH_URL = 'http://98.82.138.164:9090/auth';
+const AUTH_URL = 'http://localhost:9090/auth';
 
 export async function login(username, password) {
   try {

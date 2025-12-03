@@ -9,14 +9,10 @@ export default function ProductosPage() {
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingProducto, setEditingProducto] = useState(null);
-  const [formData, setFormData] = useState({
-    nombre: "",
-    descripcion: "",
-    precio: ""
-  });
+  const [formData, setFormData] = useState({ nombre: "", descripcion: "", precio: "" });
 
   const navigate = useNavigate();
-  const { logout, username, role, isAdmin } = useAuth();
+  const { logout, user: username, role, isAdmin } = useAuth();
 
   useEffect(() => {
     loadProductos();
@@ -38,12 +34,16 @@ export default function ProductosPage() {
     navigate("/login");
   };
 
-  // 🔒 SOLO ADMIN: Crear producto
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      await ProductoService.createProducto(formData);
-      resetForm();
+      await ProductoService.createProducto({
+        nombre: formData.nombre,
+        descripcion: formData.descripcion,
+        precio: parseFloat(formData.precio),
+      });
+      setFormData({ nombre: "", descripcion: "", precio: "" });
+      setShowForm(false);
       loadProductos();
     } catch (err) {
       alert("Error al crear producto");
@@ -51,12 +51,16 @@ export default function ProductosPage() {
     }
   };
 
-  // 🔒 SOLO ADMIN: Editar producto
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await ProductoService.updateProducto(editingProducto.id, formData);
-      resetForm();
+      await ProductoService.updateProducto(editingProducto.id, {
+        nombre: formData.nombre,
+        descripcion: formData.descripcion,
+        precio: parseFloat(formData.precio),
+      });
+      setFormData({ nombre: "", descripcion: "", precio: "" });
+      setEditingProducto(null);
       loadProductos();
     } catch (err) {
       alert("Error al actualizar producto");
@@ -64,9 +68,8 @@ export default function ProductosPage() {
     }
   };
 
-  // 🔒 SOLO ADMIN: Eliminar producto
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Eliminar producto?")) return;
+    if (!window.confirm("¿Estás seguro de eliminar este producto?")) return;
     try {
       await ProductoService.deleteProducto(id);
       loadProductos();
@@ -85,7 +88,7 @@ export default function ProductosPage() {
     });
   };
 
-  const resetForm = () => {
+  const cancelEdit = () => {
     setEditingProducto(null);
     setShowForm(false);
     setFormData({ nombre: "", descripcion: "", precio: "" });
@@ -95,7 +98,6 @@ export default function ProductosPage() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "900px", margin: "0 auto" }}>
-      {/* Header */}
       <div
         style={{
           display: "flex",
@@ -120,7 +122,6 @@ export default function ProductosPage() {
           >
             {role} - {username}
           </span>
-
           <button
             onClick={handleLogout}
             style={{
@@ -139,7 +140,6 @@ export default function ProductosPage() {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* 🔒 SOLO ADMIN: Botón agregar */}
       {isAdmin && !showForm && !editingProducto && (
         <button
           onClick={() => setShowForm(true)}
@@ -157,7 +157,6 @@ export default function ProductosPage() {
         </button>
       )}
 
-      {/* 🔒 Formulario ADMIN */}
       {isAdmin && (showForm || editingProducto) && (
         <div
           style={{
@@ -168,9 +167,7 @@ export default function ProductosPage() {
           }}
         >
           <h3>{editingProducto ? "✏️ Editar Producto" : "➕ Nuevo Producto"}</h3>
-
           <form onSubmit={editingProducto ? handleUpdate : handleCreate}>
-            {/* Nombre */}
             <div style={{ marginBottom: "15px" }}>
               <label>Nombre:</label>
               <input
@@ -183,8 +180,6 @@ export default function ProductosPage() {
                 style={{ width: "100%", padding: "8px", marginTop: "5px" }}
               />
             </div>
-
-            {/* Descripcion */}
             <div style={{ marginBottom: "15px" }}>
               <label>Descripción:</label>
               <input
@@ -197,8 +192,6 @@ export default function ProductosPage() {
                 style={{ width: "100%", padding: "8px", marginTop: "5px" }}
               />
             </div>
-
-            {/* Precio */}
             <div style={{ marginBottom: "15px" }}>
               <label>Precio:</label>
               <input
@@ -211,7 +204,6 @@ export default function ProductosPage() {
                 style={{ width: "100%", padding: "8px", marginTop: "5px" }}
               />
             </div>
-
             <button
               type="submit"
               style={{
@@ -226,10 +218,9 @@ export default function ProductosPage() {
             >
               {editingProducto ? "Actualizar" : "Crear"}
             </button>
-
             <button
               type="button"
-              onClick={resetForm}
+              onClick={cancelEdit}
               style={{
                 padding: "10px 20px",
                 backgroundColor: "#6c757d",
@@ -245,7 +236,6 @@ export default function ProductosPage() {
         </div>
       )}
 
-      {/* Lista de productos */}
       <div>
         {productos.length === 0 ? (
           <p>No hay productos disponibles</p>
@@ -253,16 +243,40 @@ export default function ProductosPage() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ backgroundColor: "#f8f9fa" }}>
-                <th style={{ padding: "10px", borderBottom: "2px solid #ddd" }}>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    borderBottom: "2px solid #ddd",
+                  }}
+                >
                   ID
                 </th>
-                <th style={{ padding: "10px", borderBottom: "2px solid #ddd" }}>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    borderBottom: "2px solid #ddd",
+                  }}
+                >
                   Nombre
                 </th>
-                <th style={{ padding: "10px", borderBottom: "2px solid #ddd" }}>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    borderBottom: "2px solid #ddd",
+                  }}
+                >
                   Descripción
                 </th>
-                <th style={{ padding: "10px", borderBottom: "2px solid #ddd" }}>
+                <th
+                  style={{
+                    padding: "10px",
+                    textAlign: "left",
+                    borderBottom: "2px solid #ddd",
+                  }}
+                >
                   Precio
                 </th>
                 {isAdmin && (
@@ -286,8 +300,7 @@ export default function ProductosPage() {
                     <strong>{p.nombre}</strong>
                   </td>
                   <td style={{ padding: "10px" }}>{p.descripcion}</td>
-                  <td style={{ padding: "10px" }}>${p.precio}</td>
-
+                  <td style={{ padding: "10px" }}>{p.precio}</td>
                   {isAdmin && (
                     <td style={{ padding: "10px", textAlign: "center" }}>
                       <button
@@ -295,6 +308,7 @@ export default function ProductosPage() {
                         style={{
                           padding: "5px 10px",
                           backgroundColor: "#ffc107",
+                          color: "black",
                           border: "none",
                           borderRadius: "4px",
                           cursor: "pointer",
@@ -303,14 +317,13 @@ export default function ProductosPage() {
                       >
                         ✏️ Editar
                       </button>
-
                       <button
                         onClick={() => handleDelete(p.id)}
                         style={{
                           padding: "5px 10px",
                           backgroundColor: "#dc3545",
-                          border: "none",
                           color: "white",
+                          border: "none",
                           borderRadius: "4px",
                           cursor: "pointer",
                         }}

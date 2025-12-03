@@ -1,32 +1,37 @@
-import axios from "axios";
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: "http://98.82.138.164:9090/api"
+  baseURL: 'http://localhost:9090/api',
 });
 
-
+// 🔐 Interceptor REQUEST: agregar token automáticamente
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
+// 🔐 Interceptor RESPONSE: manejar errores 401 y 403
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("role");
-      window.location.href = "/login";
+      // Token inválido o expirado
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+      window.location.href = '/login';
     }
     if (error.response?.status === 403) {
-      alert("No tienes permisos para realizar esta acción");
+      // Sin permisos
+      alert('No tienes permisos para realizar esta acción');
     }
     return Promise.reject(error);
   }

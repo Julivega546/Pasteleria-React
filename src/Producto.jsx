@@ -1,4 +1,4 @@
-export default function BooksPage() {
+export default function ProductosPage() {
   const [productos, setProductos] = useState([]);
   useEffect(() => {
     login("alumno", "123456").then(() => {
