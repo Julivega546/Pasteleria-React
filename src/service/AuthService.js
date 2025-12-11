@@ -1,60 +1,44 @@
-import axios from 'axios';
+import api from "../components/Api/AxiosConfig";
 
-const AUTH_URL = 'http://localhost:9090/auth';
+export const login = async (username, password) => {
+  const response = await api.post("/auth/login", { username, password });
+  const { token, username: user, role } = response.data;
 
-export async function login(username, password) {
-  try {
-    const response = await axios.post(`${AUTH_URL}/login`, { 
-      username, 
-      password 
-    });
-    
-    const { token, username: user, role } = response.data;
-    
-    // Guardar en localStorage
-    localStorage.setItem('token', token);
-    localStorage.setItem('username', user);
-    localStorage.setItem('role', role); // ⭐ GUARDAR ROL
-    
-    return { token, username: user, role };
-  } catch (error) {
-    console.error('Login falló:', error.response?.data || error.message);
-    throw error;
-  }
-}
+  localStorage.setItem("token", token);
+  localStorage.setItem("username", user);
+  localStorage.setItem("role", role);
+  localStorage.setItem("isLoggedIn", "true");
 
-export async function register(username, password, role = 'USER') {
-  try {
-    const response = await axios.post(`${AUTH_URL}/register`, { 
-      username, 
-      password,
-      role // ⭐ ENVIAR ROL
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Registro falló:', error.response?.data || error.message);
-    throw error;
-  }
-}
+  return response.data;
+};
 
-export function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('role'); // ⭐ LIMPIAR ROL
-}
+export const register = async (username, password) => {
+  const response = await api.post("/auth/register", { username, password });
+  const { token, username: user, role } = response.data;
 
-export function isAuthenticated() {
-  return !!localStorage.getItem('token');
-}
+  localStorage.setItem("token", token);
+  localStorage.setItem("username", user);
+  localStorage.setItem("role", role);
+  localStorage.setItem("isLoggedIn", "true");
 
-export function getUsername() {
-  return localStorage.getItem('username');
-}
+  return response.data;
+};
 
-export function getRole() {
-  return localStorage.getItem('role'); // ⭐ OBTENER ROL
-}
+export const isAuthenticated = () => {
+  return localStorage.getItem("token") != null;
+};
 
-export function isAdmin() {
-  return localStorage.getItem('role') === 'ADMIN'; // ⭐ VERIFICAR SI ES ADMIN
-}
+export const getUsername = () => {
+  return localStorage.getItem("username");
+};
+
+export const getRole = () => {
+  return localStorage.getItem("role");
+};
+
+export const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("username");
+  localStorage.removeItem("role");
+  localStorage.removeItem("isLoggedIn");
+};

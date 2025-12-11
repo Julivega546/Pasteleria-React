@@ -1,27 +1,36 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { register as registerService } from "./service/AuthService";
+import { useAuth } from "./context/AuthContext";
 
-export default function Register() {
-  const [email, setEmail] = useState("");
+export default function RegisterPage() {
+  const [username, setUsername] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [birthDate, setBirthDate] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
-    if (!email || !password || !confirmPassword || !birthDate) {
+    if (!username || !password || !confirmPassword || !birthDate) {
       setError("Por favor, completa todos los campos.");
       return;
     }
 
-    const age = new Date().getFullYear() - new Date(birthDate).getFullYear();
-    const monthDiff = new Date().getMonth() - new Date(birthDate).getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && new Date().getDate() < new Date(birthDate).getDate())) {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
     }
+
     if (age < 18) {
       setError("Debes tener al menos 18 años para registrarte.");
       return;
@@ -32,22 +41,14 @@ export default function Register() {
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const userExists = users.find((user) => user.email === email);
-
-    if (userExists) {
-      setError("Este correo ya está registrado.");
-      return;
+    try {
+      const { token, username: user, role } = await registerService(username, password);
+      login(token, user, role);
+      setSuccess("Registro exitoso.");
+      setTimeout(() => navigate("/"), 1000);
+    } catch (err) {
+      setError("Error al registrarse.");
     }
-
-    const newUser = { email, password, birthDate };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-
-    setSuccess("Registro exitoso. Ahora puedes iniciar sesión.");
-    setError("");
-
-    setTimeout(() => navigate("/login"), 1500);
   };
 
   return (
@@ -55,10 +56,10 @@ export default function Register() {
       <h2>Crear Cuenta</h2>
       <form onSubmit={handleRegister} className="login-form">
         <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Usuario o correo"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="date"

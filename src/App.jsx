@@ -1,13 +1,17 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import First from "./components/organisms/First";
 import LoginPage from "./LoginPage";
+import RegisterPage from "./RegisterPage";
 import ProductosPage from "./ProductosPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.css";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/productos" replace />} />
+      <Route path="/" element={<First />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route
         path="/productos"
         element={

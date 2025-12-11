@@ -1,6 +1,5 @@
-// src/components/ProtectedRoute.jsx
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children, requireAdmin = false }) {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -11,7 +10,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
 
   if (requireAdmin && !isAdmin) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
+      <div style={{ padding: "20px", textAlign: "center" }}>
         <h2>⛔ Acceso Denegado</h2>
         <p>No tienes permisos para acceder a esta página</p>
       </div>

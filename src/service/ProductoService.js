@@ -1,25 +1,38 @@
 import api from "../components/Api/AxiosConfig";
 
-class ProductoService {
-  getAllProductos() {
-    return api.get("/productos");
-  }
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return {};
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
 
-  getProductoById(id) {
-    return api.get(`/productos/${id}`);
-  }
+const getAllProductos = () => {
+  return api.get("/api/productos");
+};
 
-  createProducto(producto) {
-    return api.post("/productos", producto);
-  }
+const createProducto = (producto) => {
+  return api.post("/api/productos", producto, {
+    headers: getAuthHeaders(),
+  });
+};
 
-  updateProducto(id, producto) {
-    return api.put(`/productos/${id}`, producto);
-  }
+const updateProducto = (id, producto) => {
+  return api.put(`/api/productos/${id}`, producto, {
+    headers: getAuthHeaders(),
+  });
+};
 
-  deleteProducto(id) {
-    return api.delete(`/productos/${id}`);
-  }
-}
+const deleteProducto = (id) => {
+  return api.delete(`/api/productos/${id}`, {
+    headers: getAuthHeaders(),
+  });
+};
 
-export default new ProductoService();
+export default {
+  getAllProductos,
+  createProducto,
+  updateProducto,
+  deleteProducto,
+};
