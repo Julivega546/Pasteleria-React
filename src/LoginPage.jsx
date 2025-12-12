@@ -16,63 +16,40 @@ export default function LoginPage() {
 
     try {
       const { token, username: user, role } = await loginService(username, password);
-
       login(token, user, role);
-
-      if (role === "ADMIN") {
-        navigate("/productos");
-      } else {
-        navigate("/");
-      }
-    } catch (err) {
+      navigate("/");
+    } catch {
       setError("Usuario o contraseña incorrectos");
     }
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginTop: "80px" }}>
-      <div>
-        <h1>Iniciar Sesión</h1>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "10px" }}>
-            <label>Usuario:</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              style={{ width: "400px", display: "block" }}
-            />
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{ width: "400px", display: "block" }}
-            />
-          </div>
-          <button
-            type="submit"
-            style={{
-              width: "400px",
-              padding: "10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Iniciar Sesión
-          </button>
-        </form>
+    <section className="login">
+      <h1>Iniciar Sesión</h1>
 
-        {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+      <form onSubmit={handleSubmit} className="login-form">
+        <input
+          type="text"
+          placeholder="Usuario"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
-        <p style={{ marginTop: "15px" }}>
-          ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
-        </p>
-      </div>
-    </div>
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <p>
+        ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+      </p>
+    </section>
   );
 }
