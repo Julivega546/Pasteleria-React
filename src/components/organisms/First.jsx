@@ -47,10 +47,10 @@ export default function First() {
             <span>🌸 Redes Sociales</span>
             {showSocials && (
               <div className="social-dropdown">
-                <a href="https://www.instagram.com" target="_blank" rel="noreferrer">📸 Instagram</a>
-                <a href="https://www.facebook.com" target="_blank" rel="noreferrer">📘 Facebook</a>
-                <a href="https://www.tiktok.com" target="_blank" rel="noreferrer">🎵 TikTok</a>
-                <a href="https://wa.me/56962440331" target="_blank" rel="noreferrer">💬 WhatsApp</a>
+                <a href="https://www.instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+                <a href="https://www.facebook.com" target="_blank" rel="noreferrer">Facebook</a>
+                <a href="https://www.tiktok.com" target="_blank" rel="noreferrer">TikTok</a>
+                <a href="https://wa.me/56962440331" target="_blank" rel="noreferrer">WhatsApp</a>
               </div>
             )}
           </div>
@@ -64,7 +64,7 @@ export default function First() {
 
           {isAuthenticated && (
             <>
-              <Link to="/perfil">Perfil 👤</Link>
+              <Link to="/perfil">👤</Link>
               <button className="logout" onClick={handleLogout}>Cerrar Sesión</button>
             </>
           )}
@@ -102,6 +102,7 @@ export default function First() {
           <div className="client6"></div>
         </div>
       </section>
+      
 
       <footer className="footer">
         <p>© 2025 Pastelería Dulce Amor — Todos los derechos reservados</p>

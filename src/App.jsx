@@ -4,6 +4,7 @@ import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import ProductosPage from "./ProductosPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+
 import "./App.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Route path="/" element={<First />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+
       <Route
         path="/productos"
         element={

@@ -54,14 +54,17 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            style={{
-              width: "400px",
-              padding: "10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
+          style={{
+            width: "400px",
+            padding: "10px",
+            backgroundColor: "#ff7b7b",
+            color: "white",
+            border: "none",
+            cursor: "pointer",
+            borderRadius: "8px",
+            fontWeight: "bold",
+            transition: "0.3s",
+          }}
           >
             Iniciar Sesión
           </button>
