@@ -42,11 +42,11 @@ export default function RegisterPage() {
     }
 
     try {
-      const { token, username: user, role } = await registerService(username, password);
-      login(token, user, role);
+      const response = await registerService(username, password);
+      login(response.token, response.username, response.role);
       setSuccess("Registro exitoso.");
       setTimeout(() => navigate("/"), 1000);
-    } catch (err) {
+    } catch {
       setError("Error al registrarse.");
     }
   };

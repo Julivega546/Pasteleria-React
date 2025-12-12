@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 * {
-    margin: 0;
+    margin: 0,3;
     font-family: "Open Sans", sans-serif;
     box-sizing: border-box;
     color: #5D4037;
@@ -112,19 +112,37 @@ a:hover {
     width: 100%;
 }
 
-.client1, .client2, .client3, .client4, .client5, .client6 {
+.client1, 
+.client2, 
+.client3, 
+.client4, 
+.client5, 
+.client6 {
     background-position: center;
     background-size: cover;
     height: 120px;
     width: 160px;
     background-color: #1e1a20;
 }
-.client1{ background-image: url(/imagen/Brownies-sin-gluten.jpg); }
-.client2{ background-image: url(/imagen/cheese-cake.jpg); }
-.client3{ background-image: url(/imagen/empanadas-manzana.jpg); }
-.client4{ background-image: url(/imagen/galletas-avena-veganas.jpg); }
-.client5{ background-image: url(/imagen/mousse-chocolate.jpg); }
-.client6{ background-image: url(/imagen/pan-sin-gluten.jpg); }
+
+.client1{ 
+  background-image: url(/imagen/Brownies-sin-gluten.jpg); 
+}
+.client2{ 
+  background-image: url(/imagen/cheese-cake.jpg); 
+}
+.client3{ 
+  background-image: url(/imagen/empanadas-manzana.jpg); 
+}
+.client4{ 
+  background-image: url(/imagen/galletas-avena-veganas.jpg); 
+}
+.client5{ 
+  background-image: url(/imagen/mousse-chocolate.jpg); 
+}
+.client6{ 
+  background-image: url(/imagen/pan-sin-gluten.jpg); 
+}
 
 #clients{
     display: flex;
@@ -575,5 +593,100 @@ button.logout:hover {
 
 .btn-volver:hover {
   background-color: #ff4f85;
+}
+/* Fondo oscuro */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Caja del modal */
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 380px;
+  animation: fadeIn 0.3s ease;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.profile {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-card {
+  background: #ffe6f0;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.history-table th {
+  background: pink;
+  padding: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
+.history-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.btn-logout {
+  padding: 10px 20px;
+  background: #ff4d6d;
+  border: none;
+  color: white;
+  margin-top: 20px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 

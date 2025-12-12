@@ -3,6 +3,7 @@ import First from "./components/organisms/First";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import ProductosPage from "./ProductosPage";
+import Cart from "./components/pages/Cart";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import "./App.css";
@@ -19,6 +20,15 @@ function App() {
         element={
           <ProtectedRoute>
             <ProductosPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <Cart />
           </ProtectedRoute>
         }
       />

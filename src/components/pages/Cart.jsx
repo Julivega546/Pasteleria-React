@@ -9,27 +9,59 @@ export default function Cart() {
   const [compraRealizada, setCompraRealizada] = useState(false);
   const [pedidoID, setPedidoID] = useState("");
 
+ 
+  const [showPago, setShowPago] = useState(false);
+  const [metodo, setMetodo] = useState("");
+  const [correo, setCorreo] = useState(localStorage.getItem("username") || "");
+  const [nombre, setNombre] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [tarjeta, setTarjeta] = useState("");
+  const [errorPago, setErrorPago] = useState("");
+
+  let historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
+historial.push(pedidoID);
+localStorage.setItem("historialCompras", JSON.stringify(historial));
+
+  
+
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("products")) || [];
+    const stored = JSON.parse(localStorage.getItem("cart")) || [];
     setProducts(stored);
   }, []);
 
-  const removeProduct = (code) => {
-    const updated = products.filter((p) => p.code !== code);
+  const removeProduct = (id) => {
+    const updated = products.filter((p) => p.id !== id);
     setProducts(updated);
-    localStorage.setItem("products", JSON.stringify(updated));
+    localStorage.setItem("cart", JSON.stringify(updated));
   };
 
   const clearCart = () => {
-    localStorage.removeItem("products");
+    localStorage.removeItem("cart");
     setProducts([]);
   };
 
-  const total = products.reduce((acc, p) => acc + Number(p.price.replace(/\./g, "")), 0);
+  const total = products.reduce((acc, p) => acc + Number(p.precio), 0);
 
+  // 🟪 AHORA SOLO ABRE EL FORMULARIO DE PAGO
   const handlePagar = () => {
     if (products.length === 0) {
       alert("Tu carrito está vacío ");
+      return;
+    }
+    setShowPago(true);
+  };
+
+  // 🟪 CONFIRMAR PAGO (NUEVO)
+  const confirmarPago = () => {
+    setErrorPago("");
+
+    if (!nombre || !direccion || !metodo) {
+      setErrorPago("❌ Debes completar todos los campos obligatorios.");
+      return;
+    }
+
+    if (metodo === "tarjeta" && tarjeta.length < 8) {
+      setErrorPago("❌ Ingresa un número de tarjeta válido.");
       return;
     }
 
@@ -40,13 +72,18 @@ export default function Cart() {
       total,
       fecha: new Date().toLocaleString(),
       estado: "En preparación",
+      metodo,
+      correo,
+      nombre,
+      direccion,
     };
 
     localStorage.setItem("pedidoActual", JSON.stringify(pedidoData));
     clearCart();
+
     setPedidoID(id);
     setCompraRealizada(true);
-    setEstado("");
+    setShowPago(false);
   };
 
   const consultarPedido = () => {
@@ -68,6 +105,75 @@ export default function Cart() {
   return (
     <section className="cart-container">
       <h2>🛒 Carrito de Compras</h2>
+
+      {/* 🟪 FORMULARIO DE MÉTODO DE PAGO */}
+      {/* 🟪 FORMULARIO DE MÉTODO DE PAGO — MODAL EMERGENTE */}
+{showPago && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+
+      <h3>💳 Método de Pago</h3>
+
+      <label>Correo:</label>
+      <input
+        type="email"
+        value={correo}
+        readOnly
+        className="input-disabled"
+      />
+
+      <label>Nombre Completo:</label>
+      <input
+        type="text"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+      />
+
+      <label>Dirección de Entrega:</label>
+      <input
+        type="text"
+        value={direccion}
+        onChange={(e) => setDireccion(e.target.value)}
+      />
+
+      <label>Método de Pago:</label>
+      <select value={metodo} onChange={(e) => setMetodo(e.target.value)}>
+        <option value="">Selecciona un método</option>
+        <option value="tarjeta">Tarjeta de Débito/Crédito</option>
+        <option value="transferencia">Transferencia Bancaria</option>
+        <option value="efectivo">Efectivo</option>
+      </select>
+
+      {metodo === "tarjeta" && (
+        <>
+          <label>Número de Tarjeta:</label>
+          <input
+            type="text"
+            placeholder="**** **** **** ****"
+            value={tarjeta}
+            onChange={(e) => setTarjeta(e.target.value)}
+          />
+        </>
+      )}
+
+      {errorPago && (
+        <p style={{ color: "red", marginTop: "10px" }}>{errorPago}</p>
+      )}
+
+      <div className="modal-buttons">
+        <button className="btn-pagar" onClick={confirmarPago}>
+          Confirmar Pago
+        </button>
+
+        <button className="btn-clear" onClick={() => setShowPago(false)}>
+          Cancelar
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+
 
       {!compraRealizada ? (
         <>
@@ -99,7 +205,7 @@ export default function Cart() {
                       <td>
                         <button
                           className="btn-clear"
-                          onClick={() => removeProduct(p.code)}
+                          onClick={() => removeProduct(p.id)}
                         >
                           Eliminar
                         </button>
@@ -127,7 +233,9 @@ export default function Cart() {
         <>
           <div className="compra-exitosa">
             <h3>🎉 Compra exitosa</h3>
-            <p>Tu pedido <b>{pedidoID}</b> ha sido registrado correctamente.</p>
+            <p>
+              Tu pedido <b>{pedidoID}</b> ha sido registrado correctamente.
+            </p>
             <p>Pronto te enviaremos actualizaciones sobre su estado 📦.</p>
 
             <div className="seguimiento-carrito">

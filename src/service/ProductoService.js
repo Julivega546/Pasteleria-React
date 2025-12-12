@@ -8,6 +8,7 @@ const getAuthHeaders = () => {
   };
 };
 
+// ✅ Ahora apunta a "/api/productos" como en tu backend
 const getAllProductos = () => {
   return api.get("/api/productos");
 };

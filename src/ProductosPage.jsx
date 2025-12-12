@@ -9,11 +9,20 @@ export default function ProductosPage() {
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingProducto, setEditingProducto] = useState(null);
-  const [formData, setFormData] = useState({ nombre: "", descripcion: "", precio: "" });
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    precio: "",
+    image: "",
+  });
 
   const navigate = useNavigate();
   const { logout, user: username, role, isAdmin } = useAuth();
 
+  // ============================
+  // 🟪 CARGAR PRODUCTOS
+  // ============================
   useEffect(() => {
     loadProductos();
   }, []);
@@ -21,12 +30,36 @@ export default function ProductosPage() {
   const loadProductos = () => {
     setLoading(true);
     ProductoService.getAllProductos()
-      .then((res) => setProductos(res.data))
+      .then((res) => {
+        console.log("📦 Productos recibidos:", res.data);
+        setProductos(res.data);
+        setError("");
+      })
       .catch((err) => {
+        console.error("❌ Error cargando productos:", err);
         setError("Error al cargar productos");
-        console.error(err);
       })
       .finally(() => setLoading(false));
+  };
+
+  // ============================
+  // 🟪 CARRITO — AGREGAR PRODUCTO
+  // ============================
+  const addToCart = (producto) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const item = {
+      id: producto.id,
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      precio: producto.precio,
+      image: producto.image,
+    };
+
+    cart.push(item);
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert(`🛒 ${producto.nombre} agregado al carrito`);
   };
 
   const handleLogout = () => {
@@ -41,8 +74,10 @@ export default function ProductosPage() {
         nombre: formData.nombre,
         descripcion: formData.descripcion,
         precio: parseFloat(formData.precio),
+        image: formData.image,
       });
-      setFormData({ nombre: "", descripcion: "", precio: "" });
+
+      setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
       setShowForm(false);
       loadProductos();
     } catch (err) {
@@ -58,8 +93,10 @@ export default function ProductosPage() {
         nombre: formData.nombre,
         descripcion: formData.descripcion,
         precio: parseFloat(formData.precio),
+        image: formData.image,
       });
-      setFormData({ nombre: "", descripcion: "", precio: "" });
+
+      setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
       setEditingProducto(null);
       loadProductos();
     } catch (err) {
@@ -69,12 +106,12 @@ export default function ProductosPage() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar este producto?")) return;
+    if (!window.confirm("¿Seguro que deseas eliminar este producto?")) return;
     try {
       await ProductoService.deleteProducto(id);
       loadProductos();
     } catch (err) {
-      alert("Error al eliminar producto");
+      alert("Error al eliminar");
       console.error(err);
     }
   };
@@ -85,51 +122,53 @@ export default function ProductosPage() {
       nombre: producto.nombre,
       descripcion: producto.descripcion,
       precio: producto.precio,
+      image: producto.image,
     });
   };
 
   const cancelEdit = () => {
     setEditingProducto(null);
     setShowForm(false);
-    setFormData({ nombre: "", descripcion: "", precio: "" });
+    setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
   };
 
-  if (loading) return <div style={{ padding: "20px" }}>Cargando...</div>;
+  if (loading) return <p style={{ padding: "20px" }}>Cargando...</p>;
 
   return (
-    <div style={{ padding: "20px", maxWidth: "900px", margin: "0 auto" }}>
+    <div style={{ padding: "20px", maxWidth: "1000px", margin: "0 auto" }}>
+
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
           marginBottom: "20px",
           borderBottom: "2px solid #ddd",
           paddingBottom: "10px",
         }}
       >
         <h1>🛒 Productos</h1>
+
         <div>
           <span
             style={{
-              marginRight: "15px",
               padding: "5px 10px",
-              backgroundColor: isAdmin ? "#28a745" : "#007bff",
+              marginRight: "10px",
+              background: isAdmin ? "#28a745" : "#007bff",
               color: "white",
-              borderRadius: "4px",
-              fontSize: "14px",
+              borderRadius: "5px",
             }}
           >
             {role} - {username}
           </span>
+
           <button
             onClick={handleLogout}
             style={{
-              padding: "8px 15px",
-              backgroundColor: "#dc3545",
+              background: "#dc3545",
               color: "white",
+              padding: "8px 15px",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "5px",
               cursor: "pointer",
             }}
           >
@@ -138,37 +177,39 @@ export default function ProductosPage() {
         </div>
       </div>
 
+
       {error && <p style={{ color: "red" }}>{error}</p>}
+
 
       {isAdmin && !showForm && !editingProducto && (
         <button
           onClick={() => setShowForm(true)}
           style={{
-            padding: "10px 20px",
-            backgroundColor: "#28a745",
+            background: "#28a745",
             color: "white",
+            padding: "10px 20px",
             border: "none",
-            borderRadius: "4px",
+            borderRadius: "5px",
+            marginBottom: "15px",
             cursor: "pointer",
-            marginBottom: "20px",
           }}
         >
-          ➕ Agregar Producto
+          + Agregar Producto
         </button>
       )}
-
       {isAdmin && (showForm || editingProducto) && (
         <div
           style={{
-            backgroundColor: "#f8f9fa",
+            background: "#fff5f8",
             padding: "20px",
-            borderRadius: "8px",
+            borderRadius: "10px",
             marginBottom: "20px",
           }}
         >
-          <h3>{editingProducto ? "✏️ Editar Producto" : "➕ Nuevo Producto"}</h3>
+          <h3>{editingProducto ? "Editar Producto" : "Nuevo Producto"}</h3>
+
           <form onSubmit={editingProducto ? handleUpdate : handleCreate}>
-            <div style={{ marginBottom: "15px" }}>
+            <div style={{ marginBottom: "10px" }}>
               <label>Nombre:</label>
               <input
                 type="text"
@@ -177,10 +218,11 @@ export default function ProductosPage() {
                   setFormData({ ...formData, nombre: e.target.value })
                 }
                 required
-                style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+                style={{ width: "100%", padding: "8px" }}
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
+
+            <div style={{ marginBottom: "10px" }}>
               <label>Descripción:</label>
               <input
                 type="text"
@@ -189,10 +231,11 @@ export default function ProductosPage() {
                   setFormData({ ...formData, descripcion: e.target.value })
                 }
                 required
-                style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+                style={{ width: "100%", padding: "8px" }}
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
+
+            <div style={{ marginBottom: "10px" }}>
               <label>Precio:</label>
               <input
                 type="number"
@@ -201,32 +244,47 @@ export default function ProductosPage() {
                   setFormData({ ...formData, precio: e.target.value })
                 }
                 required
-                style={{ width: "100%", padding: "8px", marginTop: "5px" }}
+                style={{ width: "100%", padding: "8px" }}
               />
             </div>
+
+            <div style={{ marginBottom: "10px" }}>
+              <label>URL Imagen:</label>
+              <input
+                type="text"
+                value={formData.image}
+                onChange={(e) =>
+                  setFormData({ ...formData, image: e.target.value })
+                }
+                placeholder="/imagen/brownies-sin-gluten.jpg"
+                style={{ width: "100%", padding: "8px" }}
+              />
+            </div>
+
             <button
               type="submit"
               style={{
+                background: "#ff7aa8",
                 padding: "10px 20px",
-                backgroundColor: "#007bff",
                 color: "white",
                 border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
+                borderRadius: "5px",
                 marginRight: "10px",
+                cursor: "pointer",
               }}
             >
               {editingProducto ? "Actualizar" : "Crear"}
             </button>
+
             <button
               type="button"
               onClick={cancelEdit}
               style={{
+                background: "#6c757d",
                 padding: "10px 20px",
-                backgroundColor: "#6c757d",
                 color: "white",
                 border: "none",
-                borderRadius: "4px",
+                borderRadius: "5px",
                 cursor: "pointer",
               }}
             >
@@ -236,108 +294,101 @@ export default function ProductosPage() {
         </div>
       )}
 
-      <div>
-        {productos.length === 0 ? (
-          <p>No hay productos disponibles</p>
-        ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#f8f9fa" }}>
-                <th
+
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ background: "#ffe6eb" }}>
+            <th style={thStyle}>ID</th>
+            <th style={thStyle}>Imagen</th>
+            <th style={thStyle}>Nombre</th>
+            <th style={thStyle}>Descripción</th>
+            <th style={thStyle}>Precio</th>
+            <th style={thStyle}>Carrito</th>
+            {isAdmin && <th style={thStyle}>Acciones</th>}
+          </tr>
+        </thead>
+
+        <tbody>
+          {productos.map((p) => (
+            <tr key={p.id} style={{ borderBottom: "1px solid #ddd" }}>
+              <td style={tdStyle}>{p.id}</td>
+
+              <td style={tdStyle}>
+                <img
+                  src={p.image}
+                  alt={p.nombre}
                   style={{
-                    padding: "10px",
-                    textAlign: "left",
-                    borderBottom: "2px solid #ddd",
+                    width: "90px",
+                    height: "90px",
+                    objectFit: "cover",
+                    borderRadius: "6px",
+                  }}
+                />
+              </td>
+
+              <td style={tdStyle}>{p.nombre}</td>
+              <td style={tdStyle}>{p.descripcion}</td>
+              <td style={tdStyle}>${p.precio.toLocaleString("es-CL")}</td>
+
+              <td style={tdStyle}>
+                <button
+                  onClick={() => addToCart(p)}
+                  style={{
+                    padding: "6px 12px",
+                    backgroundColor: "#FFC0CB",
+                    color: "#5d4037",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
                   }}
                 >
-                  ID
-                </th>
-                <th
-                  style={{
-                    padding: "10px",
-                    textAlign: "left",
-                    borderBottom: "2px solid #ddd",
-                  }}
-                >
-                  Nombre
-                </th>
-                <th
-                  style={{
-                    padding: "10px",
-                    textAlign: "left",
-                    borderBottom: "2px solid #ddd",
-                  }}
-                >
-                  Descripción
-                </th>
-                <th
-                  style={{
-                    padding: "10px",
-                    textAlign: "left",
-                    borderBottom: "2px solid #ddd",
-                  }}
-                >
-                  Precio
-                </th>
-                {isAdmin && (
-                  <th
-                    style={{
-                      padding: "10px",
-                      textAlign: "center",
-                      borderBottom: "2px solid #ddd",
-                    }}
-                  >
-                    Acciones
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {productos.map((p) => (
-                <tr key={p.id} style={{ borderBottom: "1px solid #ddd" }}>
-                  <td style={{ padding: "10px" }}>{p.id}</td>
-                  <td style={{ padding: "10px" }}>
-                    <strong>{p.nombre}</strong>
-                  </td>
-                  <td style={{ padding: "10px" }}>{p.descripcion}</td>
-                  <td style={{ padding: "10px" }}>{p.precio}</td>
-                  {isAdmin && (
-                    <td style={{ padding: "10px", textAlign: "center" }}>
-                      <button
-                        onClick={() => startEdit(p)}
-                        style={{
-                          padding: "5px 10px",
-                          backgroundColor: "#ffc107",
-                          color: "black",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          marginRight: "5px",
-                        }}
-                      >
-                        ✏️ Editar
-                      </button>
-                      <button
-                        onClick={() => handleDelete(p.id)}
-                        style={{
-                          padding: "5px 10px",
-                          backgroundColor: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        🗑️ Eliminar
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+                  🛒 Añadir
+                </button>
+              </td>
+
+              {isAdmin && (
+                <td style={tdStyle}>
+                  <button onClick={() => startEdit(p)} style={btnYellow}>
+                    ✏️ Editar
+                  </button>
+
+                  <button onClick={() => handleDelete(p.id)} style={btnRed}>
+                    🗑️ Eliminar
+                  </button>
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
+
+const thStyle = {
+  padding: "10px",
+  borderBottom: "2px solid #ddd",
+};
+
+const tdStyle = {
+  padding: "10px",
+};
+
+const btnYellow = {
+  padding: "5px 10px",
+  background: "#ffc107",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  marginRight: "5px",
+};
+
+const btnRed = {
+  padding: "5px 10px",
+  background: "#dc3545",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+};
