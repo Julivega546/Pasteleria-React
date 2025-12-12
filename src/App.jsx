@@ -1,12 +1,12 @@
-import { Routes, Route } from "react-router-dom";
-import First from "./components/organisms/First";
-import LoginPage from "./LoginPage";
-import RegisterPage from "./RegisterPage";
-import ProductosPage from "./ProductosPage";
-import Cart from "./components/pages/Cart";
-import ProtectedRoute from "./components/ProtectedRoute";
-
-import "./App.css";
+import { Routes, Route } from "react-router-dom"
+import First from "./components/organisms/First"
+import LoginPage from "./LoginPage"
+import RegisterPage from "./RegisterPage"
+import ProductosPage from "./ProductosPage"
+import Cart from "./components/pages/Cart"
+import Profile from "./components/pages/Profile"
+import ProtectedRoute from "./components/ProtectedRoute"
+import "./App.css"
 
 function App() {
   return (
@@ -32,8 +32,17 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/perfil"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -20,9 +20,6 @@ export default function ProductosPage() {
   const navigate = useNavigate();
   const { logout, user: username, role, isAdmin } = useAuth();
 
-  // ============================
-  // 🟪 CARGAR PRODUCTOS
-  // ============================
   useEffect(() => {
     loadProductos();
   }, []);
@@ -31,34 +28,23 @@ export default function ProductosPage() {
     setLoading(true);
     ProductoService.getAllProductos()
       .then((res) => {
-        console.log("📦 Productos recibidos:", res.data);
         setProductos(res.data);
         setError("");
       })
-      .catch((err) => {
-        console.error("❌ Error cargando productos:", err);
-        setError("Error al cargar productos");
-      })
+      .catch(() => setError("Error al cargar productos"))
       .finally(() => setLoading(false));
   };
 
-  // ============================
-  // 🟪 CARRITO — AGREGAR PRODUCTO
-  // ============================
   const addToCart = (producto) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const item = {
+    cart.push({
       id: producto.id,
       nombre: producto.nombre,
       descripcion: producto.descripcion,
       precio: producto.precio,
       image: producto.image,
-    };
-
-    cart.push(item);
+    });
     localStorage.setItem("cart", JSON.stringify(cart));
-
     alert(`🛒 ${producto.nombre} agregado al carrito`);
   };
 
@@ -69,51 +55,34 @@ export default function ProductosPage() {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    try {
-      await ProductoService.createProducto({
-        nombre: formData.nombre,
-        descripcion: formData.descripcion,
-        precio: parseFloat(formData.precio),
-        image: formData.image,
-      });
-
-      setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
-      setShowForm(false);
-      loadProductos();
-    } catch (err) {
-      alert("Error al crear producto");
-      console.error(err);
-    }
+    await ProductoService.createProducto({
+      nombre: formData.nombre,
+      descripcion: formData.descripcion,
+      precio: parseFloat(formData.precio),
+      image: formData.image,
+    });
+    setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
+    setShowForm(false);
+    loadProductos();
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    try {
-      await ProductoService.updateProducto(editingProducto.id, {
-        nombre: formData.nombre,
-        descripcion: formData.descripcion,
-        precio: parseFloat(formData.precio),
-        image: formData.image,
-      });
-
-      setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
-      setEditingProducto(null);
-      loadProductos();
-    } catch (err) {
-      alert("Error al actualizar producto");
-      console.error(err);
-    }
+    await ProductoService.updateProducto(editingProducto.id, {
+      nombre: formData.nombre,
+      descripcion: formData.descripcion,
+      precio: parseFloat(formData.precio),
+      image: formData.image,
+    });
+    setFormData({ nombre: "", descripcion: "", precio: "", image: "" });
+    setEditingProducto(null);
+    loadProductos();
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este producto?")) return;
-    try {
-      await ProductoService.deleteProducto(id);
-      loadProductos();
-    } catch (err) {
-      alert("Error al eliminar");
-      console.error(err);
-    }
+    await ProductoService.deleteProducto(id);
+    loadProductos();
   };
 
   const startEdit = (producto) => {
@@ -136,7 +105,6 @@ export default function ProductosPage() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "1000px", margin: "0 auto" }}>
-
       <div
         style={{
           display: "flex",
@@ -177,9 +145,7 @@ export default function ProductosPage() {
         </div>
       </div>
 
-
       {error && <p style={{ color: "red" }}>{error}</p>}
-
 
       {isAdmin && !showForm && !editingProducto && (
         <button
@@ -197,6 +163,7 @@ export default function ProductosPage() {
           + Agregar Producto
         </button>
       )}
+
       {isAdmin && (showForm || editingProducto) && (
         <div
           style={{
@@ -210,9 +177,9 @@ export default function ProductosPage() {
 
           <form onSubmit={editingProducto ? handleUpdate : handleCreate}>
             <div style={{ marginBottom: "10px" }}>
-              <label>Nombre:</label>
               <input
                 type="text"
+                placeholder="Nombre"
                 value={formData.nombre}
                 onChange={(e) =>
                   setFormData({ ...formData, nombre: e.target.value })
@@ -223,9 +190,9 @@ export default function ProductosPage() {
             </div>
 
             <div style={{ marginBottom: "10px" }}>
-              <label>Descripción:</label>
               <input
                 type="text"
+                placeholder="Descripción"
                 value={formData.descripcion}
                 onChange={(e) =>
                   setFormData({ ...formData, descripcion: e.target.value })
@@ -236,9 +203,9 @@ export default function ProductosPage() {
             </div>
 
             <div style={{ marginBottom: "10px" }}>
-              <label>Precio:</label>
               <input
                 type="number"
+                placeholder="Precio"
                 value={formData.precio}
                 onChange={(e) =>
                   setFormData({ ...formData, precio: e.target.value })
@@ -249,14 +216,13 @@ export default function ProductosPage() {
             </div>
 
             <div style={{ marginBottom: "10px" }}>
-              <label>URL Imagen:</label>
               <input
                 type="text"
+                placeholder="/imagen/Brownies-sin-gluten.jpg"
                 value={formData.image}
                 onChange={(e) =>
                   setFormData({ ...formData, image: e.target.value })
                 }
-                placeholder="/imagen/brownies-sin-gluten.jpg"
                 style={{ width: "100%", padding: "8px" }}
               />
             </div>
@@ -294,7 +260,6 @@ export default function ProductosPage() {
         </div>
       )}
 
-
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ background: "#ffe6eb" }}>
@@ -315,7 +280,7 @@ export default function ProductosPage() {
 
               <td style={tdStyle}>
                 <img
-                  src={p.image}
+                  src={p.image?.startsWith("/") ? p.image : `/${p.image}`}
                   alt={p.nombre}
                   style={{
                     width: "90px",
@@ -328,7 +293,9 @@ export default function ProductosPage() {
 
               <td style={tdStyle}>{p.nombre}</td>
               <td style={tdStyle}>{p.descripcion}</td>
-              <td style={tdStyle}>${p.precio.toLocaleString("es-CL")}</td>
+              <td style={tdStyle}>
+                ${Number(p.precio).toLocaleString("es-CL")}
+              </td>
 
               <td style={tdStyle}>
                 <button

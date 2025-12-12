@@ -9,7 +9,6 @@ export default function Cart() {
   const [compraRealizada, setCompraRealizada] = useState(false);
   const [pedidoID, setPedidoID] = useState("");
 
- 
   const [showPago, setShowPago] = useState(false);
   const [metodo, setMetodo] = useState("");
   const [correo, setCorreo] = useState(localStorage.getItem("username") || "");
@@ -19,10 +18,8 @@ export default function Cart() {
   const [errorPago, setErrorPago] = useState("");
 
   let historial = JSON.parse(localStorage.getItem("historialCompras")) || [];
-historial.push(pedidoID);
-localStorage.setItem("historialCompras", JSON.stringify(historial));
-
-  
+  historial.push(pedidoID);
+  localStorage.setItem("historialCompras", JSON.stringify(historial));
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("cart")) || [];
@@ -42,7 +39,6 @@ localStorage.setItem("historialCompras", JSON.stringify(historial));
 
   const total = products.reduce((acc, p) => acc + Number(p.precio), 0);
 
-  // 🟪 AHORA SOLO ABRE EL FORMULARIO DE PAGO
   const handlePagar = () => {
     if (products.length === 0) {
       alert("Tu carrito está vacío ");
@@ -51,7 +47,6 @@ localStorage.setItem("historialCompras", JSON.stringify(historial));
     setShowPago(true);
   };
 
-  // 🟪 CONFIRMAR PAGO (NUEVO)
   const confirmarPago = () => {
     setErrorPago("");
 
@@ -106,74 +101,53 @@ localStorage.setItem("historialCompras", JSON.stringify(historial));
     <section className="cart-container">
       <h2>🛒 Carrito de Compras</h2>
 
-      {/* 🟪 FORMULARIO DE MÉTODO DE PAGO */}
-      {/* 🟪 FORMULARIO DE MÉTODO DE PAGO — MODAL EMERGENTE */}
-{showPago && (
-  <div className="modal-overlay">
-    <div className="modal-content">
+      {showPago && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>💳 Método de Pago</h3>
 
-      <h3>💳 Método de Pago</h3>
+            <label>Correo:</label>
+            <input type="email" value={correo} readOnly className="input-disabled" />
 
-      <label>Correo:</label>
-      <input
-        type="email"
-        value={correo}
-        readOnly
-        className="input-disabled"
-      />
+            <label>Nombre Completo:</label>
+            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
 
-      <label>Nombre Completo:</label>
-      <input
-        type="text"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-      />
+            <label>Dirección de Entrega:</label>
+            <input type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
 
-      <label>Dirección de Entrega:</label>
-      <input
-        type="text"
-        value={direccion}
-        onChange={(e) => setDireccion(e.target.value)}
-      />
+            <label>Método de Pago:</label>
+            <select value={metodo} onChange={(e) => setMetodo(e.target.value)}>
+              <option value="">Selecciona un método</option>
+              <option value="tarjeta">Tarjeta de Débito/Crédito</option>
+              <option value="transferencia">Transferencia Bancaria</option>
+              <option value="efectivo">Efectivo</option>
+            </select>
 
-      <label>Método de Pago:</label>
-      <select value={metodo} onChange={(e) => setMetodo(e.target.value)}>
-        <option value="">Selecciona un método</option>
-        <option value="tarjeta">Tarjeta de Débito/Crédito</option>
-        <option value="transferencia">Transferencia Bancaria</option>
-        <option value="efectivo">Efectivo</option>
-      </select>
+            {metodo === "tarjeta" && (
+              <>
+                <label>Número de Tarjeta:</label>
+                <input
+                  type="text"
+                  placeholder="**** **** **** ****"
+                  value={tarjeta}
+                  onChange={(e) => setTarjeta(e.target.value)}
+                />
+              </>
+            )}
 
-      {metodo === "tarjeta" && (
-        <>
-          <label>Número de Tarjeta:</label>
-          <input
-            type="text"
-            placeholder="**** **** **** ****"
-            value={tarjeta}
-            onChange={(e) => setTarjeta(e.target.value)}
-          />
-        </>
+            {errorPago && <p style={{ color: "red", marginTop: "10px" }}>{errorPago}</p>}
+
+            <div className="modal-buttons">
+              <button className="btn-pagar" onClick={confirmarPago}>
+                Confirmar Pago
+              </button>
+              <button className="btn-clear" onClick={() => setShowPago(false)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-
-      {errorPago && (
-        <p style={{ color: "red", marginTop: "10px" }}>{errorPago}</p>
-      )}
-
-      <div className="modal-buttons">
-        <button className="btn-pagar" onClick={confirmarPago}>
-          Confirmar Pago
-        </button>
-
-        <button className="btn-clear" onClick={() => setShowPago(false)}>
-          Cancelar
-        </button>
-      </div>
-
-    </div>
-  </div>
-)}
-
 
       {!compraRealizada ? (
         <>
@@ -194,19 +168,16 @@ localStorage.setItem("historialCompras", JSON.stringify(historial));
                 </thead>
                 <tbody>
                   {products.map((p) => (
-                    <tr key={p.code}>
-                      <td>{p.code}</td>
+                    <tr key={p.id}>
+                      <td>{p.id}</td>
                       <td>
-                        <img src={p.image} alt={p.name} width="80" />
+                        <img src={p.image} alt={p.nombre} width="80" />
                       </td>
-                      <td>{p.name}</td>
-                      <td>{p.description}</td>
-                      <td>${p.price}</td>
+                      <td>{p.nombre}</td>
+                      <td>{p.descripcion}</td>
+                      <td>${Number(p.precio).toLocaleString("es-CL")}</td>
                       <td>
-                        <button
-                          className="btn-clear"
-                          onClick={() => removeProduct(p.id)}
-                        >
+                        <button className="btn-clear" onClick={() => removeProduct(p.id)}>
                           Eliminar
                         </button>
                       </td>
@@ -230,35 +201,33 @@ localStorage.setItem("historialCompras", JSON.stringify(historial));
           )}
         </>
       ) : (
-        <>
-          <div className="compra-exitosa">
-            <h3>🎉 Compra exitosa</h3>
-            <p>
-              Tu pedido <b>{pedidoID}</b> ha sido registrado correctamente.
-            </p>
-            <p>Pronto te enviaremos actualizaciones sobre su estado 📦.</p>
+        <div className="compra-exitosa">
+          <h3>🎉 Compra exitosa</h3>
+          <p>
+            Tu pedido <b>{pedidoID}</b> ha sido registrado correctamente.
+          </p>
+          <p>Pronto te enviaremos actualizaciones sobre su estado 📦.</p>
 
-            <div className="seguimiento-carrito">
-              <h3> Seguimiento de pedido</h3>
-              <div className="seguimiento-inputs">
-                <input
-                  type="text"
-                  placeholder="Ingresa tu número de pedido"
-                  value={pedido}
-                  onChange={(e) => setPedido(e.target.value)}
-                />
-                <button className="btn-cart" onClick={consultarPedido}>
-                  Consultar
-                </button>
-              </div>
-              {estado && <p className="seguimiento-estado">{estado}</p>}
+          <div className="seguimiento-carrito">
+            <h3> Seguimiento de pedido</h3>
+            <div className="seguimiento-inputs">
+              <input
+                type="text"
+                placeholder="Ingresa tu número de pedido"
+                value={pedido}
+                onChange={(e) => setPedido(e.target.value)}
+              />
+              <button className="btn-cart" onClick={consultarPedido}>
+                Consultar
+              </button>
             </div>
-
-            <Link to="/productos" className="btn-volver">
-              ⬅️ Volver a Productos
-            </Link>
+            {estado && <p className="seguimiento-estado">{estado}</p>}
           </div>
-        </>
+
+          <Link to="/productos" className="btn-volver">
+            ⬅️ Volver a Productos
+          </Link>
+        </div>
       )}
     </section>
   );
