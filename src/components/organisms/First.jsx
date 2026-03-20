@@ -27,143 +27,101 @@ export default function First() {
 
   return (
     <>
+  
       <section id="first">
         <nav>
-          <a onClick={() => goHomeAndScroll("#first")} style={{ cursor: "pointer" }}>Inicio</a>
-          <a onClick={() => goHomeAndScroll("#second")} style={{ cursor: "pointer" }}>Nosotros</a>
-          <a onClick={() => goHomeAndScroll("#third")} style={{ cursor: "pointer" }}>Recomendado</a>
-          <a onClick={() => goHomeAndScroll("#blogs")} style={{ cursor: "pointer" }}>Blogs</a>
-          <Link to="/productos">Productos</Link>
-          {isAuthenticated && <Link to="/cart">Carrito</Link>}
+          <a onClick={() => goHomeAndScroll("#first")}>Cursos</a>
+          <a onClick={() => goHomeAndScroll("#second")}>Asignaturas</a>
+          <a onClick={() => goHomeAndScroll("#third")}>Notas</a>
+          <a onClick={() => goHomeAndScroll("#blogs")}>Anotaciones</a>
+          <Link to="/productos">Asistencia</Link>
         </nav>
 
-       <nav className="social-menu">
-  <div
-    className="social-toggle"
-    onMouseEnter={() => setShowSocials(true)}
-    onMouseLeave={() => setShowSocials(false)}
-    style={{ position: "relative", cursor: "pointer" }}
-  >
-    <span>🌐 Redes Sociales</span>
+        <nav className="social-menu">
+          <div
+            className="social-toggle"
+            onMouseEnter={() => setShowSocials(true)}
+            onMouseLeave={() => setShowSocials(false)}
+          >
+            🌐 Redes Sociales
 
-    <div
-      className="social-dropdown"
-      style={{
-        position: "absolute",
-        top: "30px",
-        right: "0",
-        background: "#fff",
-        padding: "10px",
-        borderRadius: "10px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-        minWidth: "160px",
-        opacity: showSocials ? 1 : 0,
-        transform: showSocials ? "translateY(0)" : "translateY(-8px)",
-        transition: "opacity 0.25s ease, transform 0.25s ease",
-        pointerEvents: showSocials ? "auto" : "none",
-        zIndex: 99,
-      }}
-    >
-      <a href="https://www.instagram.com" target="_blank" rel="noreferrer"> 📸 Instagram </a>
-      <a href="https://www.facebook.com" target="_blank" rel="noreferrer"> 📘 Facebook </a>
-      <a href="https://www.tiktok.com" target="_blank" rel="noreferrer"> 🎵 TikTok </a>
-      <a href="https://wa.me/56962440331" target="_blank" rel="noreferrer"> 💬 WhatsApp </a>
-    </div>
-  </div>
+            <div className={`dropdown ${showSocials ? "show" : ""}`}>
+              <a href="#">Instagram</a>
+              <a href="#">Facebook</a>
+              <a href="#">TikTok</a>
+              <a href="#">WhatsApp</a>
+            </div>
+          </div>
 
-  {!isAuthenticated && (
-    <>
-      <Link to="/login">Inicio Sesión</Link>
-      <Link to="/register">Registrarse</Link>
-    </>
-  )}
-
-  {isAuthenticated && (
-    <>
-      <Link to="/perfil">👤</Link>
-      <button className="logout" onClick={handleLogout}>Cerrar Sesión</button>
-    </>
-  )}
-</nav>
-
+          {!isAuthenticated ? (
+            <>
+              <Link to="/login">Inicio Sesión</Link>
+              <Link to="/register">Registrarse</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/perfil">👤</Link>
+              <button onClick={handleLogout}>Cerrar Sesión</button>
+            </>
+          )}
+        </nav>
       </section>
 
+   
       <section id="second">
-        <h2>Sobre Nosotros</h2>
+        <h2>Colegio O’Higgins</h2>
         <p>
-          Bienvenido a nuestra pastelería artesanal. Usamos ingredientes frescos y naturales
-          para entregarte la mejor experiencia dulce.
+          Estamos orientados a familias de esfuerzo que aspiran a una mejor educación 
+          para sus hijos, permitiéndoles aumentar sus posibilidades de éxito en la vida.
         </p>
       </section>
-      
 
+     
       <section id="third">
         <div id="left_third">
           <div id="image_third"></div>
         </div>
 
-
         <div id="right_third">
-          <p>La mejor experiencia dulce</p>
-          <p>Nuestros productos recomendados</p>
-          <p>Calidad y sabor que enamora <span>♥</span></p>
+          <p>Formando estudiantes para el futuro</p>
+          <p>Educación de calidad</p>
+          <p>Compromiso y excelencia académica</p>
         </div>
       </section>
 
+  
       <section id="fourth">
-        <h2>Favoritos de los Clientes</h2>
+        <h2>Noticias</h2>
         <div id="clients">
           <div className="client1"></div>
           <div className="client2"></div>
           <div className="client3"></div>
           <div className="client4"></div>
-          <div className="client5"></div>
-          <div className="client6"></div>
         </div>
       </section>
-      
 
+     
       <section id="blogs" className="products-page">
-        <h2 className="titulo-seccion" style={{ textAlign: "center" }}>Blogs y Recetas</h2>
+        <h2 className="titulo-seccion">Comunicados</h2>
 
         <div className="products-grid">
           <div className="product">
-            <iframe
-              width="100%"
-              height="200"
-              src="https://www.youtube.com/embed/KlL5UT_Gbcw"
-              title="Receta de brownies caseros"
-              allowFullScreen
-            ></iframe>
-            <p className="product-name">Brownies Caseros</p>
+            <p className="product-name">Inicio de clases 2026</p>
           </div>
 
           <div className="product">
-            <iframe
-              width="100%"
-              height="200"
-              src="https://www.youtube.com/embed/7ep34nmT-zw"
-              title="Cheesecake paso a paso"
-              allowFullScreen
-            ></iframe>
-            <p className="product-name">Cheesecake Cremoso</p>
+            <p className="product-name">Proceso de matrículas</p>
           </div>
 
           <div className="product">
-            <iframe
-              width="100%"
-              height="200"
-              src="https://www.youtube.com/embed/8aulAPMCjbc"
-              title="Galletas de avena y plátano "
-              allowFullScreen
-            ></iframe>
-            <p className="product-name">Galletas de avena y plátano</p>
+            <p className="product-name">Actividades escolares</p>
           </div>
         </div>
       </section>
 
+      
       <footer className="footer">
-        <p>© 2025 Pastelería Dulce Amor — Todos los derechos reservados</p>
+        <p>© 2025 Colegio O’Higgins</p>
       </footer>
     </>
   )
